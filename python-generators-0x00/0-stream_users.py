@@ -22,5 +22,5 @@ def stream_users():
     for row in cur:
         yield row
 
-# for user in stream_users():
-#     print(user)
+for user in stream_users():
+    print(user)
