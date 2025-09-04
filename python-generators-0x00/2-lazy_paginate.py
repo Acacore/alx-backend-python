@@ -14,20 +14,6 @@ def connect_to_prodev():
 
 #connecting to the prodev database
 # Simulated data source (e.g., users in a DB)
-import mysql.connector
-
-
-def connect_to_prodev():
-    '''Connect directly to ALX_prodev database'''
-    return mysql.connector.connect(
-        host="127.0.0.1",
-        port=3306,
-        user="root",
-        password="MySQL@5550100",
-        database="ALX_prodev"
-    )
-
-
 def paginate_users(page_size, offset):
     """
     Fetch a page of users from user_data table.
