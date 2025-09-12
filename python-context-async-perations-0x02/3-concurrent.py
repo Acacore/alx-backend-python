@@ -18,11 +18,11 @@ async def async_fetch_older_users(db_name):
             for row in rows:
                 print(row)
     
-async def fetch_currently():
+async def fetch_concurrently():
     await asyncio.gather(async_fetch_users("users.db"), async_fetch_older_users("users.db"))
 
-if __name__ = "__main__":
-    asyncio.run(fetch_currently())
+if __name__ == "__main__":
+    asyncio.run(fetch_concurrently())
 
 
 
