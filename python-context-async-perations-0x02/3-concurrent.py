@@ -4,26 +4,25 @@ import asyncio
 
 
 async def async_fetch_users(db_name):
-    conn =  await aiosqlite.connect(db_name)
-    conn.cursor()
-    query = await conn.execute("SELECT * FROM users")
-    rows = await query.fetchall()
-    for row in rows:
-        print(row)
+    async with aiosqlite.connect(db_name) as conn:
+        async with conn.execute("SELECT * FROM users") as cursor:
+            rows = await cursor.fetchall()
+            for row in rows:
+                print(row)
 
 
 async def async_fetch_older_users(db_name):
-    conn =  await aiosqlite.connect(db_name)
-    conn.cursor()
-    query = await conn.execute("SELECT * FROM users WHERE age > 40")
-    rows = await query.fetchall()
-    for row in rows:
-        print(row)
+    async with aiosqlite.connect(db_name) as conn:
+        async with conn.execute("SELECT * FROM users WHERE age > 40") as cursor:
+            rows = await cursor.fetchall()
+            for row in rows:
+                print(row)
     
-async def main():
+async def fetch_currently():
     await asyncio.gather(async_fetch_users("users.db"), async_fetch_older_users("users.db"))
 
-asyncio.run(main())
+if __name__ = "__main__":
+    asyncio.run(fetch_currently())
 
 
 
