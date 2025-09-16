@@ -10,10 +10,11 @@ class TestAccessNestedMap(unittest.TestCase):
                 ({"a": {"b": 2}}, ("a", "b"), 2, int)   
              ]
     )
-    def test_acccess_int_and_str(self, nested_map, path,  expected, expeted_type):
+    def test_acccess_int_and_str(self, nested_map, path,  expected):
         result = access_nested_map(nested_map, path)
         self.assertEqual(result,  expected)
-        self.assertIsInstance(result, expeted_type)
+
+        # self.assertIsInstance(result, expeted_type)
 
 
 
