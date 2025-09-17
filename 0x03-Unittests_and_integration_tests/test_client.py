@@ -78,26 +78,24 @@ repos_payload = [
 expected_repos = ["repo1", "repo2"]
 apache2_repos = ["repo1"]
 
-
-@parameterized_class([
-    {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos,
-    }
-])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos."""
 
     @classmethod
     def setUpClass(cls):
         """Set up class-level patching of requests.get."""
+        cls.org_payload = {"repos_url": "https://api.github.com/orgs/google/repos"}
+        cls.repos_payload = [
+            {"name": "repo1", "license": {"key": "apache-2.0"}},
+            {"name": "repo2", "license": {"key": "mit"}},
+        ]
+        cls.expected_repos = ["repo1", "repo2"]
+        cls.apache2_repos = ["repo1"]
+
         cls.get_patcher = patch("requests.get")
         mock_get = cls.get_patcher.start()
 
         def side_effect(url):
-            """Return a mocked response depending on URL."""
             mock_response = MagicMock()
             if url == GithubOrgClient.ORG_URL.format(org="google"):
                 mock_response.json.return_value = cls.org_payload
@@ -111,8 +109,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """Stop requests.get patcher."""
         cls.get_patcher.stop()
+
 
     def test_public_repos(self):
         """Integration test for public_repos without license filter."""
