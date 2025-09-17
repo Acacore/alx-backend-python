@@ -3,7 +3,7 @@
 This module provides unit tests for the access_nested_map function.
 """
 
-from unittest import TestCase, main
+from unittest import TestCase
 from parameterized import parameterized
 from client import access_nested_map
 from unittest.mock import patch
@@ -64,7 +64,8 @@ class TestMemoize(TestCase):
         """
         Test that a memoized property calls the original method only once.
 
-        - Creates a TestClass with a method a_method and a memoized property a_property.
+        - Creates a TestClass with a method a_method and a 
+        - memoized property a_property.
         - Patches a_method to monitor calls.
         - Calls a_property twice.
         - Asserts that the result is correct and a_method was called exactly once.
@@ -102,4 +103,4 @@ class TestMemoize(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    unittest.main()
