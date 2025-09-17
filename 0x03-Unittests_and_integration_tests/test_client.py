@@ -78,6 +78,16 @@ repos_payload = [
 expected_repos = ["repo1", "repo2"]
 apache2_repos = ["repo1"]
 
+
+@parameterized_class([
+    {
+        "org_payload": org_payload,
+        "repos_payload": repos_payload,
+        "expected_repos": expected_repos,
+        "apache2_repos": apache2_repos,
+    }
+])
+
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos."""
 
