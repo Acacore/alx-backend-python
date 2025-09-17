@@ -4,6 +4,7 @@ This module provides unit tests for the access_nested_map function.
 """
 
 from unittest import TestCase
+import unittest
 from parameterized import parameterized
 from client import access_nested_map
 from unittest.mock import patch
@@ -20,10 +21,16 @@ class TestAccessNestedMap(TestCase):
             ({"a": {"b": 2}}, ("a", "b"), 2, int),
         ]
     )
-    def test_access_nested_map(self, nested_map, path, expected, expected_type):
-        """Test access_nested_map returns correct value and type."""
-        self.assertEqual(access_nested_map(nested_map, path), expected)
-        self.assertIsInstance(access_nested_map(nested_map, path), expected_type)
+    def test_access_nested_map(
+        self, nested_map, path, expected, expected_type
+    ):
+        """
+        Test access_nested_map returns correct value and type.
+        """
+        self.assertEqual(
+            access_nested_map(nested_map, path), expected)
+        self.assertIsInstance(access_nested_map(nested_map, path),
+                              expected_type)
 
     @parameterized.expand([({}, ("a",)), ({"a": 1}, ("a", "b"))])
     def test_access_nested_map_exception(self, nested_map, path):
@@ -65,7 +72,8 @@ class TestMemoize(TestCase):
           and a memoized property a_property.
         - Patches a_method to monitor calls.
         - Calls a_property twice.
-        - Asserts that the result is correct and a_method was called exactly once.
+        - Asserts that the result is correct
+          and a_method was called exactly once.
         """
 
         class TestClass:
