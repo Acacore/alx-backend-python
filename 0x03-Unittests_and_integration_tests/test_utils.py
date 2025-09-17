@@ -58,7 +58,6 @@ class TestGetJson(TestCase):
 
 
 class TestMemoize(TestCase):
-
     """TestCase for the memoize decorator."""
     
     def test_memoize(self):
@@ -85,6 +84,7 @@ class TestMemoize(TestCase):
         obj = TestClass()
 
         with patch.object(obj, 'a_method') as mock_method:
+            # patch.object
             mock_method.return_value = 42
             
 
