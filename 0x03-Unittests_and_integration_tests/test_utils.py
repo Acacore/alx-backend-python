@@ -56,7 +56,7 @@ class TestGetJson(TestCase):
         mock_get.assert_called_once_with(test_url)
 
 
-class TestMemoize(unittest.TestCase):
+class TestMemoize(TestCase):
 
     """ TestCase for the memoize decorator. """
     
