@@ -64,8 +64,8 @@ class TestMemoize(TestCase):
         """
         Test that a memoized property calls the original method only once.
 
-        - Creates a TestClass with a method a_method and a 
-        - memoized property a_property.
+        - Creates a TestClass with a method a_method
+          and a memoized property a_property.
         - Patches a_method to monitor calls.
         - Calls a_property twice.
         - Asserts that the result is correct and a_method was called exactly once.
