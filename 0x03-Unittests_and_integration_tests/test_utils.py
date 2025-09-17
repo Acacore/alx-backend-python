@@ -22,5 +22,15 @@ class TestAccessNestedMap(TestCase):
         self.assertIsInstance(access_nested_map(nested_map, path), expected_type)
 
 
+    @parameterized.expand([
+        ({},("a",), KeyError),
+        ({"a": 1}, ("a", "b"), KeyError)
+    ])
+    def test_access_nested_map_exception(self, nested_map, path, expected_execptiom):
+        """Test access_nested_map raises a KeyError for missing keys."""
+        with self.assertRaises(self, nested_map, path, expected_execptiom):
+            access_nested_map(nested_map, path)
+
+
 if __name__ == "__main__":
     main()
