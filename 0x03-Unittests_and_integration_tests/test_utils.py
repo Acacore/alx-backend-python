@@ -46,10 +46,10 @@ class TestGetJson(TestCase):
     
     @patch('utils.requests.get')
     def test_get_json(self, test_url, test_payload, mock_get):
-        #configure mock
+        # configure mock
         mock_get.return_value.json.return_value = test_payload
         
-        #call function
+        # call function
         result = get_json(test_url)
         
         # Assertions
@@ -65,7 +65,8 @@ class TestMemoize(TestCase):
         """
         Test that a memoized property calls the original method only once.
         
-        - Creates a TestClass with a method a_method and a memoized property a_property.
+        - Creates a TestClass with a method a_method and a memoized property
+        a_property.
         - Patches a_method to monitor calls.
         - Calls a_property twice.
         - Asserts that the result is correct and a_method was called exactly once.
