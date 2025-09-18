@@ -12,6 +12,9 @@ class User(AbstractUser):
         ("admin", "Admin"),
         ("host","Host")
     ]
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    password = models.CharField(max_length=128)
     email = models.EmailField(blank=False, null=False)
     phone_number = PhoneNumberField(blank=True)
     role = models.CharField(choices=ROLE, default=(ROLE[0][0]), max_length=20)
@@ -25,7 +28,7 @@ class User(AbstractUser):
         ]
         
 class Message(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     recipient_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     message_body = models.TextField()
@@ -35,13 +38,13 @@ class Message(models.Model):
         return f'{self.sender_id.username} messaged {self.recipient_id.username}'
 
 class Conversation(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     participants_id = models.ForeignKey(User,on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now) 
 
 
 class Property(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    property_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     host_id = models.ForeignKey(User,on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     description = models.TextField
@@ -61,7 +64,7 @@ class Booking(models.Model):
               ('confrimed', 'Confirmed'),
               ('canceled', 'Canceled')]
     
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    booking_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     property_id = models.ForeignKey(Property, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     start_date = models.DateTimeField(default=timezone.now)
@@ -74,11 +77,15 @@ class Booking(models.Model):
         return f'{self.user_id.username} books {self.property_id.name}'
 
 class Review(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    property = models.ForeignKey(Property,on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    property_id = models.ForeignKey(Property,on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=3, validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(default=timezone.now)
+    
+
+    def __str__(self):
+        return f'{user_id.username} reviewed {property_id.name} with {rating}' 
 
 
 class Payment(models.Model):
@@ -87,11 +94,11 @@ class Payment(models.Model):
               ('cancel','Canceld'),
               ('failed','Failed')]
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    id = models.URLField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment_id = models.URLField(primary_key=True, default=uuid.uuid4, editable=False)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     status = models.CharField(choices=STATUS, default=STATUS[0][0], max_length=16)
 
     def __str__(self):
-        return f'{self.user.username} paid {self.amount}'
+        return f'{self.user_id.username} paid {self.amount}'
