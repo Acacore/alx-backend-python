@@ -54,9 +54,18 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "messaging_app.urls"
 
-permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      IsOwnerOrReadOnly]
+# permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+#                       IsOwnerOrReadOnly]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+   'rest_framework.permissions.AllowAny',
+]
+}
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
