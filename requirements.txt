@@ -1,2 +1,4 @@
 django
 djangorestframework
+django-allauth
+django-phonenumber-field[phonenumbers]

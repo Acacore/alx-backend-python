@@ -26,6 +26,8 @@ class User(AbstractUser):
         constraints = [
             models.UniqueConstraint(fields=['email'], name='unique_email')
         ]
+
+
         
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -39,13 +41,13 @@ class Message(models.Model):
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    participants_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    participants_id = models.ForeignKey(User,on_delete=models.CASCADE, related_name="conversation")
     created_at = models.DateTimeField(default=timezone.now) 
 
 
 class Property(models.Model):
     property_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    host_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    host_id = models.ForeignKey(User,on_delete=models.CASCADE, related_name='property')
     name = models.CharField(max_length=128)
     description = models.TextField
     location = models.CharField(max_length=128)
@@ -65,21 +67,21 @@ class Booking(models.Model):
               ('canceled', 'Canceled')]
     
     booking_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    property_id = models.ForeignKey(Property, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    property_id = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="property")
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="booking")
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateField(default=timezone.now)
     total_price = models.DecimalField(max_digits=6, decimal_places=2)
     status = models.CharField(choices=STATUS, default=STATUS[0][0], max_length=12)
-    created_at = models.DateTimeField(default=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'{self.user_id.username} books {self.property_id.name}'
 
 class Review(models.Model):
     review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    property_id = models.ForeignKey(Property,on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    property_id = models.ForeignKey(Property,on_delete=models.CASCADE, related_name="review")
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="review")
     rating = models.IntegerField(default=3, validators=[MinValueValidator(1), MaxValueValidator(5)])
     created_at = models.DateTimeField(default=timezone.now)
     
@@ -94,9 +96,9 @@ class Payment(models.Model):
               ('cancel','Canceld'),
               ('failed','Failed')]
     
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    payment_id = models.URLField(primary_key=True, default=uuid.uuid4, editable=False)
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payement")
+    payment_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="booking")
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     status = models.CharField(choices=STATUS, default=STATUS[0][0], max_length=16)
 
