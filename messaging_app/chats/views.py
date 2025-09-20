@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from .serializers import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import filters
 
 from django.contrib.auth import get_user_model
 
@@ -67,6 +68,10 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
 
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['message_body']   # assuming Message has a 'content' field
+    ordering_fields = ['created_at']
+
     def get_queryset(self):
         # Return onlly the message created by the authenticated user
         user = self.request.user
@@ -80,6 +85,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
+
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['participants_id__username']   # or 'participants__username' if not using _id
+    ordering_fields = ['created_at']
 
     def get_queryset(self):
         # Show only conversations where the authenticated user is the participant
