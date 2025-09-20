@@ -70,18 +70,25 @@ class MessageViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Return onlly the message created by the authenticated user
         user = self.request.user
-        return self.queryset.filter(sender_id=user)
+        return self.queryset.filter(sender_id=user.id)
     
     def perform_create(self, serializer):
         # Automatically set the user field to the authenticated
-        serializer.save(sender_id=self.request.user)
+        serializer.save(sender_id=self.request.user.id)
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
 
-    
+    def get_queryset(self):
+        # Show only conversations where the authenticated user is the participant
+        return self.queryset.filter(participants_id=self.request.user)
+
+    def perform_create(self, serializer):
+        # Automatically set the participant to the authenticated user
+        serializer.save(participants_id=self.request.user)
+  
     
  
 

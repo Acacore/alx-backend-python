@@ -44,7 +44,7 @@ class Conversation(models.Model):
     participants_id = models.ForeignKey(User,on_delete=models.CASCADE, related_name="conversation")
     created_at = models.DateTimeField(default=timezone.now) 
 
-
+    
 class Property(models.Model):
     property_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     host_id = models.ForeignKey(User,on_delete=models.CASCADE, related_name='property')
