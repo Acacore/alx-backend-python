@@ -88,8 +88,7 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ConversationSerializer(serializers.ModelSerializer):
-    conversation_id = serializers.UUIDField(read_only=True)
-    user_id = UserSerializer(read_only=True)
+    # conversation_id = serializers.UUIDField(read_only=True)
    
     class Meta:
         model = Conversation

@@ -81,14 +81,9 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        # Return onlly the message created by the authenticated user
-        user = self.request.user
-        return self.queryset.filter(participants_id=user)
     
-    def perform_create(self, serializer):
-        # Automatically set the user field to the authenticated
-        serializer.save(user=self.request.user)
+    
+ 
 
 class BookingViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
