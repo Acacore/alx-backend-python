@@ -7,7 +7,7 @@ from unittest import TestCase
 import unittest
 from parameterized import parameterized
 from client import access_nested_map
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from utils import get_json, memoize
 
 
@@ -86,7 +86,6 @@ class TestMemoize(TestCase):
             def a_property(self):
                 """Return the value of a_method, memoized."""
                 return self.a_method()
-            
 
             @patch("utils.requests.get")
             def test_get_json_0_http_example_com(self, mock_get):
@@ -110,7 +109,7 @@ class TestMemoize(TestCase):
                 obj = TestClass()
 
                 with patch.object(TestClass, "a_method",
-                                return_value=42) as mock_method:
+                                  return_value=42) as mock_method:
                     # patch.object
                     mock_method.return_value = 42
 
