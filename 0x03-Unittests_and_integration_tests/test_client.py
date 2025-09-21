@@ -90,10 +90,9 @@ apache2_repos = ["repo1"]
 
 @parameterized_class(
     ("org_payload", "repos_payload",
-     "expected_repos", "apache2_repos"),
-     TEST_PAYLOAD)
-    
-        
+     "expected_repos", "apache2_repos"
+     ), TEST_PAYLOAD
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos."""
 
