@@ -21,14 +21,12 @@ class TestAccessNestedMap(TestCase):
             ({"a": {"b": 2}}, ("a", "b"), 2, int),
         ]
     )
-    def test_access_nested_map(
-        self, nested_map, path, expected, expected_type
-    ):
+    def test_access_nested_map(self, nested_map,
+                               path, expected, expected_type):
         """
         Test access_nested_map returns correct value and type.
         """
-        self.assertEqual(
-            access_nested_map(nested_map, path), expected)
+        self.assertEqual(access_nested_map(nested_map, path), expected)
         self.assertIsInstance(access_nested_map(nested_map, path),
                               expected_type)
 
@@ -50,6 +48,7 @@ class TestGetJson(TestCase):
     )
     @patch("utils.requests.get")
     def test_get_json(self, test_url, test_payload, mock_get):
+        """"""
         # configure mock
         mock_get.return_value.json.return_value = test_payload
 
@@ -87,23 +86,44 @@ class TestMemoize(TestCase):
             def a_property(self):
                 """Return the value of a_method, memoized."""
                 return self.a_method()
+            
 
-        obj = TestClass()
+            @patch("utils.requests.get")
+            def test_get_json_0_http_example_com(self, mock_get):
+                """
+                Test that get_json returns the expected dictionary payload
+                when called with http://example.com.
+                """
+                # Arrange
+                url = "http://example.com"
+                expected_payload = {"payload": True}
+                mock_get.return_value = Mock()
+                mock_get.return_value.json.return_value = expected_payload
 
-        with patch.object(obj, "a_method") as mock_method:
-            # patch.object
-            mock_method.return_value = 42
+                # Act
+                result = get_json(url)
 
-            # Call the property twice
-            result1 = obj.a_property
-            result2 = obj.a_property
+                # Assert
+                self.assertEqual(result, expected_payload)
+                mock_get.assert_called_once_with(url)
 
-            # Assert the property returns expected value
-            self.assertEqual(result1, 42)
-            self.assertEqual(result2, 42)
+                obj = TestClass()
 
-            # Assert a_method ws called only once
-            mock_method.assert_called_once()
+                with patch.object(TestClass, "a_method",
+                                return_value=42) as mock_method:
+                    # patch.object
+                    mock_method.return_value = 42
+
+                    # Call the property twice
+                    result1 = obj.a_property
+                    result2 = obj.a_property
+
+                    # Assert the property returns expected value
+                    self.assertEqual(result1, 42)
+                    self.assertEqual(result2, 42)
+
+                    # Assert a_method ws called only once
+                    mock_method.assert_called_once()
 
 
 if __name__ == "__main__":
