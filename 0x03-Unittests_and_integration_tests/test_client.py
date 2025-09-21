@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized_class, parameterized
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -88,15 +89,11 @@ apache2_repos = ["repo1"]
 
 
 @parameterized_class(
-    [
-        {
-            "org_payload": org_payload,
-            "repos_payload": repos_payload,
-            "expected_repos": expected_repos,
-            "apache2_repos": apache2_repos,
-        }
-    ]
-)
+    ("org_payload", "repos_payload",
+     "expected_repos", "apache2_repos"),
+     TEST_PAYLOAD)
+    
+        
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos."""
 
