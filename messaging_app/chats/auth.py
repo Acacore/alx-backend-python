@@ -1,5 +1,6 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
+from rest_framework import permissions
 
 User = get_user_model()
 
@@ -21,3 +22,4 @@ class EmailOrUsernameBackend(ModelBackend):
         if user.check_password(password):
             return user
         return None
+

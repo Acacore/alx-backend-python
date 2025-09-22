@@ -5,7 +5,7 @@ from .serializers import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import filters
-
+from .permissions import *
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -66,7 +66,7 @@ class PropertyViewset(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message_body']   # assuming Message has a 'content' field

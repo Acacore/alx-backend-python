@@ -27,22 +27,23 @@ class User(AbstractUser):
             models.UniqueConstraint(fields=['email'], name='unique_email')
         ]
 
+class Conversation(models.Model):
+    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    participants_id = models.ManyToManyField(User, related_name="conversation")
+    created_at = models.DateTimeField(default=timezone.now) 
 
+    def __str__(self):
+        return f"{self.participants_id.username} has messaged "
         
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
-    recipient_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     message_body = models.TextField()
     sent_at = models.DateTimeField(default=timezone.now)
+    conversation = models.ForeignKey(Conversation, related_name="message", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.sender_id.username} messaged {self.recipient_id.username}'
-
-class Conversation(models.Model):
-    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    participants_id = models.ForeignKey(User,on_delete=models.CASCADE, related_name="conversation")
-    created_at = models.DateTimeField(default=timezone.now) 
+        return f'{self.sender_id.username} sent message'
 
     
 class Property(models.Model):
