@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import filters
 from .permissions import *
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import PermissionDenied
 
 User = get_user_model()
 
@@ -76,19 +77,16 @@ class MessageViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Return onlly the message created by the authenticated user
         user = self.request.user
-        return self.queryset.filter(sender_id=user.id)
+        return Message.objects.filter(conversation__participants_id=user.id)
     
     def perform_create(self, serializer):
         # Automatically set the user field to the authenticated
         user = self.request.user
-        conversation = Conversation.objects.get(conversation_id =user)
-        
+        conversation = serializer.validated_data["conversation"]
 
         if user not in conversation.participants_id.all():
-            return Response(
-                {"details": "Not allowed"},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            raise PermissionDenied("You are not a participant in this conversation")
+        
         serializer.save(sender_id=self.request.user.id, conversation=conversation)
 
 class ConversationViewSet(viewsets.ModelViewSet):
