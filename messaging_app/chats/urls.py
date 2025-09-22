@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import *
 from .serializers import *
-from rest_framework.routers import NestedDefaultRouter
+from rest_framework_nested.routers import NestedDefaultRouter
 from rest_framework import routers
 
 router = routers.DefaultRouter()
