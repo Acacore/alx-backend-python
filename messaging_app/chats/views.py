@@ -8,11 +8,16 @@ from rest_framework import filters
 from .permissions import *
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import APIException
+
 
 User = get_user_model()
 
 
-
+class ForbiddenException(APIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    default_detail = "You are not a participant in this conversation."
+    default_code = "forbidden"
 
 
 
@@ -44,6 +49,7 @@ class ReviewViewset(viewsets.ModelViewSet):
         return self.queryset.filter(user_id=user)
     
     def perform_create(self, serializer):
+        
         # Automatically set the user field to the authenticated
         serializer.save(user=self.request.user)
 
@@ -83,9 +89,11 @@ class MessageViewSet(viewsets.ModelViewSet):
         # Automatically set the user field to the authenticated
         user = self.request.user
         conversation = serializer.validated_data["conversation"]
+        conversation_id = conversation.conversation_id 
 
         if user not in conversation.participants_id.all():
-            raise PermissionDenied("You are not a participant in this conversation")
+            raise ForbiddenException(
+                detail=f"You are not allowed to post in conversation {conversation_id}")
         
         serializer.save(sender_id=self.request.user.id, conversation=conversation)
 
