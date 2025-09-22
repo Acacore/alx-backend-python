@@ -1,5 +1,5 @@
 from rest_framework import permissions
-
+from .models import *
 
 class IsOwner(permissions.BasePermission):
     '''
@@ -27,11 +27,15 @@ class IsParticipantOfConversation(permissions.BasePermission):
             return False
         
         # if obj is a Message -> check conversation participants
-        if hasattr(obj, "conversation"):
+        if isinstance(obj, Message):
+            if request.method in ["PUT", "PATCH", "DELETE"]:
+                return user in obj.conversation.participants_id.all()
             return user in obj.conversation.participants_id.all()
         
         # if obj is a convesation -> check participant
-        if hasattr(obj, "participants"):
+        if isinstance(obj, Conversation):
+            if request.method in ["PUT", "PATCH", "DELETE"]:
+                return user in obj.participants_id.all()
             return user in obj.participants_id.all()
         
         return False

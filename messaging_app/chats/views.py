@@ -72,6 +72,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     search_fields = ['message_body']   # assuming Message has a 'content' field
     ordering_fields = ['created_at']
 
+   
     def get_queryset(self):
         # Return onlly the message created by the authenticated user
         user = self.request.user
@@ -79,7 +80,16 @@ class MessageViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         # Automatically set the user field to the authenticated
-        serializer.save(sender_id=self.request.user.id)
+        user = self.request.user
+        conversation = Conversation.objects.get(conversation_id =user)
+        
+
+        if user not in conversation.participants_id.all():
+            return Response(
+                {"details": "Not allowed"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        serializer.save(sender_id=self.request.user.id, conversation=conversation)
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
