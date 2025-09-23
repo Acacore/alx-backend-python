@@ -76,12 +76,33 @@ class PropertySerializer(serializers.ModelSerializer):
     def get_average_rating(self, obj):
         return obj.reviews.aggregate(avg=Avg("rating"))["avg"] or 0
 
-class ConversationSerializer(serializers.ModelSerializer):
-    # conversation_id = serializers.UUIDField(read_only=True)
+# class ConversationSerializer(serializers.ModelSerializer):
+#     # conversation_id = serializers.UUIDField(read_only=True)
    
-    class Meta:
+#     class Meta:
+#         model = Conversation
+#         fields = '__all__'
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+   participants = serializers.PrimaryKeyRelatedField(
+       many=True, queryset=User.objects.all(),
+       source="participants_id", required=False)
+   
+   class Meta:
         model = Conversation
         fields = '__all__'
+
+
+   def validate_participants(self, value):
+       '''Ensure participants are valid users and 
+        prevent the creator from being duplicated.'''
+       
+       request = self.context["request"]
+       if request.user in value:
+           raise serializers.ValidationError("You cannot include yourself, you will be added automatically.")
+       return value
+       
 
 
 
@@ -105,25 +126,6 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ["id", "message_id", "sender", "timestamp"]
 
-class ConversationSerializer(serializers.ModelSerializer):
-   participants = serializers.PrimaryKeyRelatedField(
-       many=True, queryset=User.objects.all(),
-       source="participants_id", required=False)
-   
-   class Meta:
-        model = Conversation
-        fields = '__all__'
-
-
-   def validate_participants(self, value):
-       '''Ensure participants are valid users and 
-        prevent the creator from being duplicated.'''
-       
-       request = self.context["request"]
-       if request.user in value:
-           raise serializers.ValidationError("You cannot include yourself, you will be added automatically.")
-       return value
-       
 
     
 class BookingSerializer(serializers.ModelSerializer):

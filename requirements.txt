@@ -4,3 +4,4 @@ django-allauth
 django-phonenumber-field[phonenumbers]
 drf-nested-routers
 djangorestframework-simplejwt
+django-filter

@@ -9,7 +9,7 @@ from .permissions import *
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.exceptions import APIException
-
+from .pagination import *
 
 User = get_user_model()
 
@@ -71,9 +71,12 @@ class PropertyViewset(viewsets.ModelViewSet):
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
+    queryset = Message.objects.order_by("pk")
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+    pagination_class = CustomPagination
+    
+
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message_body']   # assuming Message has a 'content' field
@@ -98,9 +101,12 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer.save(sender_id=self.request.user, conversation=conversation)
 
 class ConversationViewSet(viewsets.ModelViewSet):
-    queryset = Conversation.objects.all()
+    queryset = Conversation.objects.order_by("pk")
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 20
+    # pagination_class.page_query_param="pagenum"
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['participants_id__username']   # or 'participants__username' if not using _id
