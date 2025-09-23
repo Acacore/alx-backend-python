@@ -103,17 +103,31 @@ class MessageViewSet(viewsets.ModelViewSet):
         
         serializer.save(sender_id=self.request.user, conversation=conversation)
 
+
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.order_by("pk")
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = PageNumberPagination
-    pagination_class.page_size = 20
-    # pagination_class.page_query_param="pagenum"
+    pagination_class = CustomPagination
 
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['participants_id__username']   # or 'participants__username' if not using _id
-    ordering_fields = ['created_at']
+    filter_backends = [DjangoFilterBackend,
+                       SearchFilter,
+                       OrderingFilter,]
+    search_fields = ['message_body']   # assuming Message has a 'content' field
+    ordering_fields = ['participants_id', 'created_at']
+
 
     def get_queryset(self):
         # Show only conversations where the authenticated user is the participant
@@ -141,7 +155,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
 
-    
+
 class BookingViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
