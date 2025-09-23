@@ -7,9 +7,12 @@ from rest_framework.response import Response
 from rest_framework import filters
 from .permissions import *
 from django.contrib.auth import get_user_model
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.exceptions import APIException
 from .pagination import *
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+
 
 User = get_user_model()
 
@@ -76,11 +79,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     pagination_class = CustomPagination
     
-
-
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend,
+                       SearchFilter,
+                       OrderingFilter,]
     search_fields = ['message_body']   # assuming Message has a 'content' field
-    ordering_fields = ['sent_at']
+    ordering_fields = ['sender_id', 'sent_at']
 
    
     def get_queryset(self):
