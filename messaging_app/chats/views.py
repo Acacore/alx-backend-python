@@ -9,7 +9,7 @@ from .permissions import *
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import APIException
 from .pagination import *
-from message_filter import *
+from .message_filter import *
 
 
 
@@ -102,17 +102,6 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer.save(sender_id=self.request.user, conversation=conversation)
 
 
-    
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.order_by("pk")
@@ -138,16 +127,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
         if extra_participants:
             conversation.participants_id.add(*extra_participants)
  
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+   
     
 
 
