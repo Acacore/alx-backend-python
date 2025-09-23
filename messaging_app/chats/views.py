@@ -9,8 +9,7 @@ from .permissions import *
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import APIException
 from .pagination import *
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
+from message_filter import *
 
 
 
@@ -78,12 +77,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     pagination_class = CustomPagination
-    
-    filter_backends = [DjangoFilterBackend,
-                       SearchFilter,
-                       OrderingFilter,]
+    filterset_class = MessageFilter
     search_fields = ['message_body']   # assuming Message has a 'content' field
     ordering_fields = ['sender_id', 'sent_at']
+    
+   
 
    
     def get_queryset(self):
@@ -121,10 +119,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
-
-    filter_backends = [DjangoFilterBackend,
-                       SearchFilter,
-                       OrderingFilter,]
+    filterset_class = MessageFilter
     search_fields = ['message_body']   # assuming Message has a 'content' field
     ordering_fields = ['participants_id', 'created_at']
 
