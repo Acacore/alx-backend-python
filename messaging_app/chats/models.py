@@ -33,7 +33,8 @@ class Conversation(models.Model):
     created_at = models.DateTimeField(default=timezone.now) 
 
     def __str__(self):
-        return f"{self.participants_id.username} has messaged "
+        usernames = ", ".join([user.username for user in self.participants_id.all()])
+        return f"Conversation between {usernames}"
         
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

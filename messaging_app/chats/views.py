@@ -77,7 +77,7 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message_body']   # assuming Message has a 'content' field
-    ordering_fields = ['created_at']
+    ordering_fields = ['sent_at']
 
    
     def get_queryset(self):
@@ -95,7 +95,7 @@ class MessageViewSet(viewsets.ModelViewSet):
             raise ForbiddenException(
                 detail=f"You are not allowed to post in conversation {conversation_id}")
         
-        serializer.save(sender_id=self.request.user.id, conversation=conversation)
+        serializer.save(sender_id=self.request.user, conversation=conversation)
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
@@ -111,10 +111,14 @@ class ConversationViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(participants_id=self.request.user)
 
     def perform_create(self, serializer):
-        # Automatically set the participant to the authenticated user
-        serializer.save(participants_id=self.request.user)
-  
-    
+        conversation = serializer.save()
+        # Add the creator
+        conversation.participants_id.add(self.request.user)
+
+        # Add any other participants from the request
+        extra_participants = self.request.data.get("participants", [])
+        if extra_participants:
+            conversation.participants_id.add(*extra_participants)
  
 
 class BookingViewSet(viewsets.ModelViewSet):
