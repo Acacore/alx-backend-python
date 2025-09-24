@@ -1,6 +1,6 @@
 from datetime import datetime
 from .models import *
-from rest_framework import 
+
 import logging
 
 logging.basicConfig(
@@ -23,7 +23,7 @@ class RequestLoggingMiddleware:
     def __call__(self, request):
         user = request.user if request.user.is_authenticated else 'Anonymous'
         logger.info(f"User: {user} - Path: {request.path}")
-        response = self.get_response(request):
+        response = self.get_response(request)
         return response
 
     
