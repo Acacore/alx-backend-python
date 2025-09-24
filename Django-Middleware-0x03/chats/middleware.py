@@ -7,7 +7,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s -%(message)s',
     handlers=[
-        logging.FileHandler('request_logs.log')
+        logging.FileHandler('requests.log')
     ]
 )
 
