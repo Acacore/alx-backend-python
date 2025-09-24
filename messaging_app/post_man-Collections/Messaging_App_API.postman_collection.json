@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "New Request",
+			"name": "conversations",
 			"event": [
 				{
 					"listen": "test",
@@ -70,6 +70,14 @@
 						""
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "messages",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
