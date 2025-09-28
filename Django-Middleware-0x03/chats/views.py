@@ -73,7 +73,7 @@ class PropertyViewset(viewsets.ModelViewSet):
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.order_by("sent_at")
+    queryset = Message.objects.all().order_by("sent_at")
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     pagination_class = CustomPagination

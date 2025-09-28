@@ -31,16 +31,16 @@ class RequestLoggingMiddleware:
         return response
 
 
-class RestrictAccessByTimeMiddleware:
+# class RestrictAccessByTimeMiddleware:
 
-    def __init__(self, get_response):
-        self.get_response = get_response
+#     def __init__(self, get_response):
+#         self.get_response = get_response
 
-    def __call__(self, request):
-        if request.path == "/messages/":
-            if 18 < current_hour < 21:
-                return HttpResponseForbidden("Message not allowed at this time")
-            return self.respnse(request)
+#     def __call__(self, request):
+#         if request.path == "/messages/":
+#             if 18 < current_hour < 21:
+#                 return HttpResponseForbidden("Message not allowed at this time")
+#             return self.response(request)
 
 class OffensiveLanguageMiddleware:
 

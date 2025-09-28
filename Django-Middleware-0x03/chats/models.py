@@ -43,6 +43,9 @@ class Message(models.Model):
     sent_at = models.DateTimeField(default=timezone.now)
     conversation = models.ForeignKey(Conversation, related_name="message", on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ["sent_at"]
+
     def __str__(self):
         return f'{self.sender_id.username} sent message'
 
@@ -89,7 +92,7 @@ class Review(models.Model):
     
 
     def __str__(self):
-        return f'{user_id.username} reviewed {property_id.name} with {rating}' 
+        return f'{self.user_id.username} reviewed {self.property_id.name} with {self.rating}' 
 
 
 class Payment(models.Model):

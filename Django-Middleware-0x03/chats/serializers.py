@@ -115,7 +115,7 @@ class MessageSerializer(serializers.ModelSerializer):
     conversation_datail = ConversationSerializer(
         source="conversation", read_only=True
     )
-    read_only_fields = ["id", "message_id", "sender", "timestamp"]
+    read_only_fields = ["id", "message_id", "sent_at", "timestamp"]
 
     # message_id = serializers.UUIDField(read_only=True)
     # user = UserSerializer(read_only=True)
