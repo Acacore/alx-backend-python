@@ -20,9 +20,8 @@ from django.urls import path, include
 from rest_framework import routers
 
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("messaging.urls")),
-    path('accounts/', include('allauth.urls')),
+    path("accounts/", include("allauth.urls")),
 ]
