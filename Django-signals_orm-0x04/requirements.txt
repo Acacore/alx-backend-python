@@ -1,4 +1,0 @@
-django
-django-filter
-djangorestframework
-django-allauth
