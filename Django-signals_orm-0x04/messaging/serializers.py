@@ -9,6 +9,27 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["url", "username", "email", "is_staff"]
 
 
-class MessagingSerializer:
+class NotificationSerializer(serializers.ModelSerializer):
+   
+    class meta:
+        models = Notification
+        fields = ["message", "reciever", "content"]
 
-    class meta: ...
+
+class MessagingSerializer(serializers.ModelSerializer):
+    message_history = serializers.SerializerMethodField()
+
+    class meta:
+        models = Message
+        fields = ["sender", "reciever", "content", "message_history"]
+
+    def get_message_history(self, obj):
+       track =  MessageHistory.objects.filter(message=obj.pk)
+       return MessageHistorySerializer(track, many=True).data
+
+
+class MessageHistorySerializer(serializers.ModelSerializer):
+    
+    class meta:
+        models = MessageHistory
+        fields = ["message", "old_content"]

@@ -132,7 +132,6 @@ class BookingSerializer(serializers.ModelSerializer):
     booking_id = serializers.UUIDField(read_only=True)
     user_id = UserSerializer(read_only=True)
 
-
     class Meta:
         model = Booking
         fields = '__all__'
