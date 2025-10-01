@@ -15,7 +15,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
+    queryset = Message.objects.select_related('sender')
     serializer_class = MessagingSerializer
     permission_classes = [IsAuthenticated]
 

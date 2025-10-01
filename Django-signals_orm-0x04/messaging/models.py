@@ -14,6 +14,7 @@ class Message(models.Model):
     receiver = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="recieved_messages"
     )
+    parent_message = models.ForeignKey(self, null=True, blank=True, on_delete=models.CASCADE)
     content = models.TextField()
     edited = models.BooleanField(default=False)
     timestamp = models.DateTimeField(default=timezone.now)

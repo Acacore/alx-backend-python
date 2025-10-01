@@ -18,6 +18,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class MessagingSerializer(serializers.ModelSerializer):
     message_history = serializers.SerializerMethodField()
+    sender = serializers.SerializerMethodField()
 
     class meta:
         models = Message
@@ -26,6 +27,9 @@ class MessagingSerializer(serializers.ModelSerializer):
     def get_message_history(self, obj):
        track =  MessageHistory.objects.filter(message=obj.pk)
        return MessageHistorySerializer(track, many=True).data
+    
+    def get_sender(self, obj):
+        return obj.sender.pk
 
 
 class MessageHistorySerializer(serializers.ModelSerializer):
