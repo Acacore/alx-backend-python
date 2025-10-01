@@ -32,4 +32,5 @@ class Notification(models.Model):
 class MessageHistory(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     old_content = models.TextField()
-    timestamp = models.DateTimeField(default=timezone.now)
+    edited_at = models.DateTimeField(default=timezone.now)
+    edited_by = models.ForeignKey(User, on_delete=models.CASCADE)
