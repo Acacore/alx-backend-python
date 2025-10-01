@@ -1,6 +1,7 @@
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from .models import *
+from django.shortcuts import get_object_or_404
 
 # @receiver(post_save, sender=Message)
 # def message_sent(sender, instance, created, **kwargs):
@@ -31,4 +32,9 @@ def create_messageHistory(sender, instance, **kwargs):
             
     except Message.DoesNotExist:
         return
+
+@receiver(post_delete, sender=User)
+def delete_account(sender, instance, **kwargs):
+    user_messages = Message.objects.filter(sender=instance.pk)
+    user_messages.delete()
         
