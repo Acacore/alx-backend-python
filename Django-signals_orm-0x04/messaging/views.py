@@ -3,6 +3,7 @@ from .serializers import *
 from .models import *
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -20,3 +21,10 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     class meta:
         ...
+
+
+def delete_user(request):
+    if request.user.is_authenticated:
+        user = get_object_or_404(User, pk=request.user.pk)
+        user.delete()
+
