@@ -18,4 +18,5 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessagingSerializer
     permission_classes = [IsAuthenticated]
 
-    class meta: ...
+    class meta:
+        ...

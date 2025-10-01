@@ -15,6 +15,7 @@ class Message(models.Model):
         User, on_delete=models.CASCADE, related_name="recieved_messages"
     )
     content = models.TextField()
+    edited = models.BooleanField(default=False)
     timestamp = models.DateTimeField(default=timezone.now)
 
 
@@ -26,3 +27,9 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"{self.message.content[:30]}..."
+
+
+class MessageHistory(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    old_content = models.TextField()
+    timestamp = models.DateTimeField(default=timezone.now)
