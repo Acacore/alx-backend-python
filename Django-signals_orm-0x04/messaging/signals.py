@@ -6,3 +6,12 @@ from .models import *
 def message_sent(sender, instance, created, **kwargs):
     if created:
         print(f"A new Message has been sent to {instance.receiver}")
+
+
+@receiver(post_save, sender=Message)
+def create_notification(sender, instance, created, **kwargs):
+    if created:
+        Notification.objects.create(
+            user=instance.receiver,
+            message=instance
+        )
