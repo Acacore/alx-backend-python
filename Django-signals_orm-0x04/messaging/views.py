@@ -73,5 +73,5 @@ def user_message(request):
 @login_required   
 def unread_message(request):
     if request.user.is_authenticated():
-         user = request.user
-    return Message.unread_message.unread_for_user(user).only('content', 'timestamp')
+        user = request.user
+        return Message.unread.unread_for_user(user).only('content', 'timestamp')

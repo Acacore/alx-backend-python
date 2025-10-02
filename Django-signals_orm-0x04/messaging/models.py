@@ -1,12 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from manager import UnreadMessageManager
+
 
 
 # Create your models here.
-class UnreadMessageManager(models.Manager):
-    def unread_for_user(self, user):
-        return super().get_queryset().filter(reciever=user, read=False)
 
 class Message(models.Model):
     sender = models.ForeignKey(
@@ -21,7 +20,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     read = models.BooleanField(default=False)
     
-    unread_message = UnreadMessageManager()
+    unread = UnreadMessageManager()
 
 
     def __str__(self):
