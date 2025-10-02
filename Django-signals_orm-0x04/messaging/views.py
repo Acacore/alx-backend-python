@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 
 # Create your views here.
 
@@ -21,6 +23,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.select_related('sender')
     serializer_class = MessagingSerializer
     permission_classes = [IsAuthenticated]
+    
 
     def create(self, request):
         sender = request.user
@@ -30,7 +33,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(sender=sender, receiver=receiver)
 
-
+@method_decorator(cache_page(60))
 def fetch_thread(root_message):
     # 1. Pull all descendants in one query (or even all messages in the conversation)
     all_messages = (
@@ -63,6 +66,7 @@ def delete_user(request):
         user.delete()
 
 @login_required
+@method_decorator(cache_page(60))
 def user_message(request):
     if request.user.is_authenticated:
         messages = Message.objects.select_related("sender").filter(sender=request.user)
