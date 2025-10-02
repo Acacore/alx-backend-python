@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from .serializers import *
 from .models import *
+from .models import Message
 from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
+from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 # Create your views here.
