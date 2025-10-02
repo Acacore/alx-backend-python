@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from manager import UnreadMessageManager
+from managers import UnreadMessageManager
 
 
 
