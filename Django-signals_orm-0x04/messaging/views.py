@@ -68,3 +68,10 @@ def user_message(request):
         messages = Message.objects.select_related("sender").filter(sender=request.user)
         data = list(messages.values)
         return JsonResponse(data, safe=False)
+    
+
+@login_required   
+def unread_message(request):
+    if request.user.is_authenticated():
+         user = request.user
+    return Message.unread_message.unread_for_user(user).only('content', 'timestamp')

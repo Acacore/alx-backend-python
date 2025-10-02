@@ -4,7 +4,9 @@ from django.utils import timezone
 
 
 # Create your models here.
-
+class UnreadMessageManager(models.Manager):
+    def unread_for_user(self, user):
+        return super().get_queryset().filter(reciever=user, read=False)
 
 class Message(models.Model):
     sender = models.ForeignKey(
@@ -17,6 +19,9 @@ class Message(models.Model):
     content = models.TextField()
     edited = models.BooleanField(default=False)
     timestamp = models.DateTimeField(default=timezone.now)
+    read = models.BooleanField(default=False)
+    
+    unread_message = UnreadMessageManager()
 
 
     def __str__(self):
@@ -37,3 +42,5 @@ class MessageHistory(models.Model):
     old_content = models.TextField()
     edited_at = models.DateTimeField(default=timezone.now)
     edited_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
