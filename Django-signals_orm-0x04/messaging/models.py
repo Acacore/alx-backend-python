@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from managers import UnreadMessageManager
+from managers import UnreadMessagesManager
 
 
 
@@ -20,7 +20,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     read = models.BooleanField(default=False)
     
-    unread = UnreadMessageManager()
+    unread = UnreadMessagesManager()
 
 
     def __str__(self):
