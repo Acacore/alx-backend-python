@@ -65,7 +65,6 @@ def delete_user(request):
 @login_required
 def user_message(request):
     if request.user.is_authenticated:
-        sender = request.user
-        messages = Message.objects.select_related("sender").filter(sender=sender)
+        messages = Message.objects.select_related("sender").filter(sender=request.user)
         data = list(messages.values)
         return JsonResponse(data, safe=False)
