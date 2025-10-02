@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from .serializers import *
 from .models import *
+from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from collections import defaultdict
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -28,13 +31,10 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer.save(sender=sender, receiver=receiver)
 
 
-from collections import defaultdict
-
 def fetch_thread(root_message):
     # 1. Pull all descendants in one query (or even all messages in the conversation)
     all_messages = (
-        Message.objects
-        .filter(parent_message__isnull=False)   # all replies in DB
+        Message.objects.filter(parent_message__isnull=False)   # all replies in DB
         .select_related("sender", "receiver", "parent_message")  # avoids FK lookups
     )
 
@@ -62,3 +62,10 @@ def delete_user(request):
         user = get_object_or_404(User, pk=request.user.pk)
         user.delete()
 
+@login_required
+def user_message(request):
+    if request.user.is_authenticated:
+        sender = request.user
+        messages = Message.objects.select_related("sender").filter(sender=sender)
+        data = list(messages.values)
+        return JsonResponse(data, safe=False)
