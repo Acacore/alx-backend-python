@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from managers import UnreadMessagesManager
+from .managers import UnreadMessagesManager
 
 
 
 # Create your models here.
 
 class Message(models.Model):
+    objects = models.Manager()
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="sent_messages"
     )
