@@ -1,0 +1,31 @@
+# Python-related files and directories
+__pycache__/
+*.pyc
+*.pyo
+*.mo
+.venv/
+venv/
+pip-cache/
+.pytest_cache/
+
+# Version control and editor files
+.git/
+.gitignore
+.DS_Store
+.vscode/
+.idea/
+
+# Local development files
+db.sqlite3
+.env
+docker-compose.yml # If not needed for the final image
+secrets.json # Or other local secret files
+
+# Static files and media not needed during the build process
+# (If you're building static files within the container, adjust accordingly)
+static_cdn/
+media_cdn/
+
+# Logs and temporary files
+*.log
+tmp/

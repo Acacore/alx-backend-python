@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 from rest_framework import permissions
 from datetime import timedelta
@@ -59,7 +59,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "chats.middleware.RequestLoggingMiddleware"
+    #"chats.middleware.RequestLoggingMiddleware"
 ]
 
 ROOT_URLCONF = "messaging_app.urls"
@@ -115,10 +115,20 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ('POSTGRES_DB'),
+        "USER": os.environ("POSTGRES_USER"),
+        "PASSWORD": os.environ('POSTGRES_PASSWORD'),
+        "HOST": os.environ('DB_HOST', 'db'),
+        "PORT": os.environ("DB_PORT", 5432)
     }
+    
+
 }
 
 
