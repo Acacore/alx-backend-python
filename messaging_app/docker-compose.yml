@@ -9,6 +9,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DB: ${DB_HOST}
 
     ports:
       - "3306:3306"
@@ -26,7 +27,8 @@ services:
   web:
     build: .
     container_name: messaging_app
-    command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+    # command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+    command: python3 manage.py runserver 0.0.0.0:8000
     restart: always
 
     volumes:
