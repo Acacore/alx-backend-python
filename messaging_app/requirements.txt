@@ -7,3 +7,4 @@ djangorestframework-simplejwt
 django-filter
 python-dotenv
 psycopg2-binary
+mysqlclient

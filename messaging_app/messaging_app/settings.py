@@ -119,15 +119,14 @@ DATABASES = {
     #     "ENGINE": "django.db.backends.sqlite3",
     #     "NAME": BASE_DIR / "db.sqlite3",
     # }
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ('POSTGRES_DB'),
-        "USER": os.environ("POSTGRES_USER"),
-        "PASSWORD": os.environ('POSTGRES_PASSWORD'),
-        "HOST": os.environ('DB_HOST', 'db'),
-        "PORT": os.environ("DB_PORT", 5432)
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('MYSQL_DATABASE'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT', '3306'),
     }
-    
 
 }
 
