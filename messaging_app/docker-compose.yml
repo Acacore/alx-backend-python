@@ -12,7 +12,7 @@ services:
       MYSQL_DB: ${DB_HOST}
 
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
     volumes:
       - messaging_app_db:/var/lib/mysql
