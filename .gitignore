@@ -1,2 +1,3 @@
 /env
 messaging_app/.env
+messaging_app/db.sqlite3

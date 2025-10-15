@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messaging-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: messaging-app
+  template:
+    metadata:
+      labels:
+        app: messaging-app
+    spec:
+      containers:
+        - name: messaging-app
+          image: your-dockerhub-username/messaging_app:latest  # replace with your image
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DEBUG
+              value: "True"
+            - name: DB_HOST
+              value: "messaging-mysql-service"
+            - name: DB_PORT
+              value: "3306"
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: messaging-mysql-secret
+                  key: mysql-database
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: messaging-mysql-secret
+                  key: mysql-user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: messaging-mysql-secret
+                  key: mysql-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-app-service
+spec:
+  selector:
+    app: messaging-app
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: LoadBalancer

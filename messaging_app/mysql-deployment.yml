@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messaging-mysql
+spec:
+  selector:
+    matchLabels:
+      app: messaging-mysql
+  template:
+    metadata:
+      labels:
+        app: messaging-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: messaging-mysql-secret
+                  key: mysql-root-password
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: messaging-mysql-secret
+                  key: mysql-user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: messaging-mysql-secret
+                  key: mysql-password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: messaging-mysql-secret
+                  key: mysql-database
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: messaging-mysql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-mysql-service
+spec:
+  selector:
+    app: messaging-mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
