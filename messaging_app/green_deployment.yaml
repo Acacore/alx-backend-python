@@ -1,20 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django-deployment
+  name: django-green
 spec:
-  replicas: 2  # how many app instances to run
+  replicas: 3  # how many app instances to run
   selector:
     matchLabels:
       app: django
+      version: green
   template:
     metadata:
+      name: django-green
       labels:
         app: django
+        version: green
     spec:
       containers:
         - name: django
-          image: acacore/messaging_app:latest  # replace with your image
+          image: acacore/messaging_app:latest  # new version/tag
           ports:
             - containerPort: 8000
           env:
@@ -29,3 +32,10 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-database
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
