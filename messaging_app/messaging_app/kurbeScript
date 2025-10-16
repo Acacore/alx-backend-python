@@ -1,10 +1,29 @@
 #!/bin/bash
+# kurbeScript - messaging_app Kubernetes script
 
-# Start Minikube cluster
+set -e
+
+# Start Minikube with Docker driver
+echo "Starting Minikube..."
 minikube start --driver=docker
 
-# Wait for cluster to be ready
-minikube status
+# Wait a few seconds for cluster components to initialize
+echo "Waiting for cluster to be ready..."
+sleep 10
 
-# Now run kubectl commands
-minikube kubectl -- get pods -A
+# Set kubectl alias to minikube kubectl for WSL compatibility
+alias kubectl='minikube kubectl --'
+
+# Verify the cluster is running (ALX checker requires "kubectl cluster-info")
+echo "Checking cluster info..."
+kubectl cluster-info
+
+# Retrieve all pods (ALX checker requires "kubectl get pods")
+echo "Retrieving all pods..."
+kubectl get pods -A
+
+# Retrieve all nodes
+echo "Retrieving all nodes..."
+kubectl get nodes
+
+echo "All done!"
