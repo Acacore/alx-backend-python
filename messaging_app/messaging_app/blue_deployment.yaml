@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: acacore/messaging_app:latest  # replace with your image
+          image: acacore/messaging_app:2.0  # replace with your image
           ports:
             - containerPort: 8000
           env:
