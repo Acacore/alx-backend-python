@@ -1,0 +1,22 @@
+#!/bin/bash
+# kubctl-0x03
+
+# Apply the updated blue deployment
+echo "Applying updated blue deployment..."
+kubectl apply -f blue_deployment.yaml
+
+# Trigger a rolling update
+echo "Starting rolling update..."
+kubectl rollout status deployment/django-blue
+
+# Monitor rolling update using background curl requests
+echo "Testing app availability during rolling update..."
+URL="http://$(minikube ip):80/"  # adjust if using NodePort or Ingress
+for i in {1..20}; do
+    curl -s -o /dev/null -w "%{http_code} %{time_total}\n" $URL
+    sleep 1
+done
+
+# Verify current pods after rolling update
+echo "Current pods status:"
+kubectl get pods -l app=django,version=blue
