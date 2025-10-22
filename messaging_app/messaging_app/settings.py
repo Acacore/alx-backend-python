@@ -115,18 +115,18 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # }
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MYSQL_DATABASE'),
-        'USER': os.getenv('MYSQL_USER'),
-        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': os.getenv('MYSQL_DATABASE' 'test_db'),
+    #     'USER': os.getenv('MYSQL_USER', 'test_user'),
+    #     'PASSWORD': os.getenv('MYSQL_PASSWORD', 'test_pass'),
+    #     'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+    #     'PORT': os.getenv('DB_PORT', '3306'),
+    # }
 
 }
 
