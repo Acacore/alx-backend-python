@@ -1,0 +1,69 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        images: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_pass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uruoot -port"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+        env:
+          DJANGO_SETTINGS_MODULE: messaging_app.settings 
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: 3306
+          MYSQL_DB: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_pass
+        
+        steps:
+          - name: checkout code
+            uses: actions/checkout@v4
+            
+            
+          - name: set up python
+            uses: actions/setp-python@v5
+            with:
+              python-version: '3.10'
+          
+          - name: Install dependencies
+            run: |
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+              pip install pytest pytest-django mysqlclient
+
+          - name: Wait for MuSQL to be ready
+            run: |
+              until mysqladmin ping -h127.0.0.1 -ptest_pass --silent; do
+                echo "Waiting for database connection..."
+                sleep 3
+              done
+            
+            
+          - name: Run Django tests
+            run: |
+                python manage.py migrate
+                python manage.py test
+
+
+
+
+
