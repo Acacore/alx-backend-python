@@ -3,9 +3,10 @@ pipeline {
 
     environment {
         VENV_NAME = "venv"
+        //credentialsId
         GITHUB_CREDENTIALS = credentials('github-key-id')              
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-cred-id')
-        IMAGE_NAME = 'acacore/messaging_app'
+        IMAGE_NAME = 'acacore/messaging_app' 
     }
 
     stages {
