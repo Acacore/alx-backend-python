@@ -1,0 +1,85 @@
+pipeline {
+    agent any
+
+    environment {
+        VENV_NAME = "venv"
+        GITHUB_CREDENTIALS = credentials('github-key-id')              
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-cred-id')
+        IMAGE_NAME = 'acacore/messaging_app'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    try {
+                        git branch: 'main', url: 'https://github.com/Acacore/alx-backend-python/tree/2a0d12a56dfc1519842cf3b99df633877d611e55/messaging_app'
+                    } catch (err) {
+                        error "Git checkout failed: ${err}"
+                    }
+                }
+            }
+        }
+
+        stage('Setup Python') {
+            steps {
+                script {
+                    try {
+                        sh """
+                        python3 -m venv ${VENV_NAME}
+                        source ${VENV_NAME}/bin/activate
+                        pip3 install --upgrade pip
+                        pip3 install -r messaging_app/requirements.txt
+                        """
+                    } catch (err) {
+                        error "Python setup failed: ${err}"
+                    }
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    try {
+                        sh """
+                        source ${VENV_NAME}/bin/activate
+                        pytest --junitxml=report.xml
+                        """
+                    } catch (err) {
+                        echo "Tests failed: ${err}"
+                        // Continue to archive report even if tests fail
+                    }
+                }
+            }
+        }
+
+        stage('Archive Test Report') {
+            steps {
+                script {
+                    try {
+                        junit 'report.xml'
+                    } catch (err) {
+                        echo "Failed to archive test report: ${err}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Cleaning up virtual environment..."
+            sh "rm -rf ${VENV_NAME}"
+        }
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed! Check the logs for details."
+        }
+        unstable {
+            echo "Pipeline finished with some tests failing."
+        }
+    }
+}
